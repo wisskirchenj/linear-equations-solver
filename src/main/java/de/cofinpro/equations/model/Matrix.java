@@ -18,6 +18,10 @@ public class Matrix {
         this.elements = new double[rows][columns];
     }
 
+    public double get(int row, int col) {
+        return elements[row][col];
+    }
+
     /**
      * fill a matrix row form a given vector
      * @param rowIndex index of the row to fill
@@ -40,5 +44,20 @@ public class Matrix {
 
     private double rowTimesVector(double[] row, double[] vector) {
         return IntStream.range(0, row.length).mapToDouble(i -> row[i] * vector[i]).sum();
+    }
+
+    public void scaleRowInverse(int row, double inverseFactor) {
+        IntStream.range(0, columns).forEach(i -> elements[row][i] /= inverseFactor);
+    }
+
+    public void addScaledRowToRow(double factor, int rowToAdd, int targetRow) {
+        IntStream.range(0, columns).forEach(i -> elements[targetRow][i] =
+                Math.fma(factor, elements[rowToAdd][i], elements[targetRow][i]));
+    }
+
+    public void swapRows(int i, int j) {
+        double[] temp = elements[i].clone();
+        fillRowFrom(i, elements[j]);
+        fillRowFrom(j, temp);
     }
 }

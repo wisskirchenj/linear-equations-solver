@@ -25,7 +25,7 @@ public class ConsolePrinter {
     public void printVector(double[] vector) {
         StringBuilder builder = new StringBuilder();
         Arrays.stream(vector)
-                .map(d -> Math.rint(d * 1e5) / 1e5)
+                .map(d -> Math.rint(d * 1e6) / 1e6)
                 .mapToObj(String::valueOf)
                 .forEach(string -> builder.append(string).append(" "));
         builder.deleteCharAt(builder.length() - 1);

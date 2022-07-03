@@ -14,6 +14,10 @@ public class ExtendedCoefficientMatrix extends Matrix {
         this.dimension = dimension;
     }
 
+    public int getDimension() {
+        return dimension;
+    }
+
     /**
      * get the left-side coefficients a square matrix
      */
