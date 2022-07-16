@@ -26,9 +26,9 @@ public class GaussAlgorithm {
      * @param matrix the extended matrix to work on
      */
     private void backSolve(ExtendedCoefficientMatrix matrix) {
-        for (int col = matrix.getDimension() - 1; col > 0; col--) {
+        for (int col = matrix.getColumns() - 2; col > 0; col--) {
             for (int row = col - 1; row >= 0 ; row--) {
-                if (matrix.get(row, col) != 0) {
+                if (col < matrix.getRows() && matrix.get(row, col) != 0 && matrix.get(col, col) != 0) {
                     printer.printInfo("%.6f * R%d + R%d -> R%d".formatted(-matrix.get(row, col), col, row, row));
                     matrix.addScaledRowToRow(-matrix.get(row, col), col, row);
                 }
@@ -41,35 +41,40 @@ public class GaussAlgorithm {
      * @param matrix the extended matrix to work on
      */
     private void setToReducedEchelon(ExtendedCoefficientMatrix matrix) {
-        for (int col = 0; col < matrix.getDimension(); col++) {
+        for (int col = 0; col < Math.min(matrix.getColumns() - 1, matrix.getRows()); col++) {
             setPivotOne(col, matrix);
-            for (int row = col + 1; row < matrix.getDimension(); row++) {
-                printer.printInfo("%.6f * R%d + R%d -> R%d".formatted(-matrix.get(row, col), col, row, row));
-                matrix.addScaledRowToRow(-matrix.get(row, col), col, row);
+            for (int row = col + 1; row < matrix.getRows(); row++) {
+                if (matrix.notPrecisionCorrectedZero(matrix.get(row, col))) {
+                    printer.printInfo("%.6f * R%d + R%d -> R%d".formatted(-matrix.get(row, col), col, row, row));
+                    matrix.addScaledRowToRow(-matrix.get(row, col), col, row);
+                }
             }
         }
     }
 
     /**
      * scales the pivot of the diagonal element (col, col) to 1. If the row has a 0 at the element to scale,
-     * the algortihm searches for a row below with a non zeor element in the position and swaps the rows.
-     * @param col the row = column whose diagaonal element is toi be scaled to one.
+     * the algorithm searches for a row below with a non zero element in the position and swaps the rows.
+     * @param col the row = column whose diagonal element is to be scaled to one.
      * @param matrix the extended matrix to operate on.
-     * @throws UnsupportedOperationException if the square matrix of the extended matrix is not regular.
+     * @return true if a pivot was found and scaled to 1 for this column, false if all were 0
      */
-    private void setPivotOne(int col, ExtendedCoefficientMatrix matrix) {
+    private boolean setPivotOne(int col, ExtendedCoefficientMatrix matrix) {
         int row = col;
-        while (matrix.get(row, col) == 0 && row < matrix.getDimension()) {
+        while (row < matrix.getRows() && matrix.get(row, col) == 0) {
             row++;
         }
-        if (row == matrix.getDimension()) {
-            throw new UnsupportedOperationException("singular coefficient matrix not supported yet.");
+        if (row == matrix.getRows()) {
+            return false;
         }
         if (col != row) {
             printer.printInfo("swapping R%d <-> R%d".formatted(row, col));
             matrix.swapRows(row, col);
         }
-        printer.printInfo("1/%.6f * R%d -> R%d".formatted(matrix.get(col, col), col, col));
-        matrix.scaleRowInverse(col, matrix.get(col, col));
+        if (matrix.notPrecisionCorrectedZero(1 - matrix.get(col, col))) {
+            printer.printInfo("1/%.6f * R%d -> R%d".formatted(matrix.get(col, col), col, col));
+            matrix.scaleRowInverse(col, matrix.get(col, col));
+        }
+        return true;
     }
 }

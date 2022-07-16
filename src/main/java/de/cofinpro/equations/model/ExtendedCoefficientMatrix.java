@@ -3,42 +3,37 @@ package de.cofinpro.equations.model;
 import java.util.stream.IntStream;
 
 /**
- * coefficient matrix of a full system of linear equations, with one extra column for the right side of the equation
+ * coefficient matrix of a system of linear equations, with one extra column for the right side of the equation
  * (the result vector).
  */
 public class ExtendedCoefficientMatrix extends Matrix {
 
-    private final int dimension;
-    public ExtendedCoefficientMatrix(int dimension) {
-        super(dimension, dimension + 1);
-        this.dimension = dimension;
-    }
-
-    public int getDimension() {
-        return dimension;
-    }
-
-    /**
-     * get the left-side coefficients a square matrix
-     */
-    public SquareMatrix getSquareMatrix() {
-        SquareMatrix result = new SquareMatrix(dimension);
-        for (int i = 0; i < dimension; i++) {
-            result.fillRowFrom(i, elements[i]);
-        }
-        return result;
+    public ExtendedCoefficientMatrix(int variables, int equations) {
+        super(equations, variables + 1);
     }
 
     public double[] getResultVector() {
-        return IntStream.range(0, dimension).mapToDouble(i -> elements[i][dimension]).toArray();
+        return IntStream.range(0, columns - 1).mapToDouble(i -> elements[i][columns - 1]).toArray();
     }
 
     /**
-     * solve the linear eqaution represented by the coefficient matrix - by inverting the square and multiplying
-     * if the determinant is zero, an exception is thrown in determinant().
-     * @return the solution vector.
+     * Checks, if a matrix has a row of the form "0 0 ... 0 x" for an x != 0, which cannot have a solution.
+     * Note, that the method gives a concise check on a system of lon. equations ony for a matrix in row echelon form.
+     * @return the check result
      */
-    public double[] solve() {
-        return getSquareMatrix().invert().multVector(getResultVector());
+    public boolean hasUnsolvableEquation() {
+        for (int i = 0; i < rows; i++) {
+            boolean allCoefficientsZero = true;
+            for (int j = 0; j < columns - 1; j++) {
+                if (notPrecisionCorrectedZero(get(i, j))) {
+                    allCoefficientsZero = false;
+                    break;
+                }
+            }
+            if (allCoefficientsZero && notPrecisionCorrectedZero(get(i, columns - 1))) {
+                return true;
+            }
+        }
+        return false;
     }
 }

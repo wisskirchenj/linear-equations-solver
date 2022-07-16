@@ -15,12 +15,13 @@ public abstract class EquationsReader {
 
     /**
      * read a coefficient matrix line-wise per matrix row.
-     * @param dimension the number of rows
+     * @param variables the number of variables = left side of equations
+     * @param equations the number of equations = rows
      * @return hte CoefficientMatrix
      */
-    public ExtendedCoefficientMatrix readExtendedCoefficientMatrix(int dimension) {
-        ExtendedCoefficientMatrix matrix = new ExtendedCoefficientMatrix(dimension);
-        for (int i = 0; i < dimension; i++) {
+    public ExtendedCoefficientMatrix readExtendedCoefficientMatrix(int variables, int equations) {
+        ExtendedCoefficientMatrix matrix = new ExtendedCoefficientMatrix(variables, equations);
+        for (int i = 0; i < equations; i++) {
             matrix.fillRowFrom(i, readLineIntoDoubles());
         }
         return matrix;

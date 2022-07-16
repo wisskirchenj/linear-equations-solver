@@ -24,7 +24,8 @@ class EquationsFileReaderTest {
     void whenGoodPath_readMatrixWorks() throws IOException {
         fileReader = new EquationsFileReader(inputPath);
         ExtendedCoefficientMatrix extendedCoefficientMatrix = fileReader.readExtendedCoefficientMatrix();
-        assertEquals(3, extendedCoefficientMatrix.getDimension());
+        assertEquals(3, extendedCoefficientMatrix.getRows());
+        assertEquals(4, extendedCoefficientMatrix.getColumns());
         assertArrayEquals(new double[] {9, 1, 0}, extendedCoefficientMatrix.getResultVector());
     }
 }

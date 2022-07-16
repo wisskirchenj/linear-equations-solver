@@ -1,11 +1,14 @@
 package de.cofinpro.equations.model;
 
+import lombok.Getter;
+
 import java.util.InputMismatchException;
 import java.util.stream.IntStream;
 
 /**
  * Matrix base class providing some basic operations to fill, multiply, etc..
  */
+@Getter
 public class Matrix {
 
     protected final int rows;
@@ -59,5 +62,28 @@ public class Matrix {
         double[] temp = elements[i].clone();
         fillRowFrom(i, elements[j]);
         fillRowFrom(j, temp);
+    }
+
+    protected int rankForEchelonForm() {
+        int rank = 0;
+        for (int i = 0; i < rows; i++) {
+            if (isNotZeroRow(i)) {
+                rank++;
+            }
+        }
+        return rank;
+    }
+
+    private boolean isNotZeroRow(int i) {
+        for (double el: elements[i]) {
+            if (notPrecisionCorrectedZero(el)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    protected boolean notPrecisionCorrectedZero(double decimal) {
+        return Math.abs(decimal) > 1e-08;
     }
 }

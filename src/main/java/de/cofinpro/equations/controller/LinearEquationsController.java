@@ -3,7 +3,7 @@ package de.cofinpro.equations.controller;
 import de.cofinpro.equations.config.PropertyManager;
 import de.cofinpro.equations.io.ConsolePrinter;
 import de.cofinpro.equations.io.EquationsFileReader;
-import de.cofinpro.equations.io.FilePrinter;
+import de.cofinpro.equations.model.EchelonFormAnalyzer;
 import de.cofinpro.equations.model.ExtendedCoefficientMatrix;
 import de.cofinpro.equations.model.GaussAlgorithm;
 
@@ -25,6 +25,6 @@ public class LinearEquationsController {
     public void run() {
         ExtendedCoefficientMatrix extendedMatrix = equationsFileReader.readExtendedCoefficientMatrix();
         new GaussAlgorithm(printer).apply(extendedMatrix);
-        new FilePrinter(PropertyManager.getProperty(OUTPUT_FILE_OPTION)).printVector(extendedMatrix.getResultVector());
+        new EchelonFormAnalyzer(extendedMatrix).saveResult(PropertyManager.getProperty(OUTPUT_FILE_OPTION));
     }
 }

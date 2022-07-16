@@ -27,7 +27,9 @@ public class EquationsFileReader extends EquationsReader {
      * @return the ExtendedCoefficientMatrix representing the system of linear equations stored in the file.
      */
     public ExtendedCoefficientMatrix readExtendedCoefficientMatrix() {
-        int dimension = Integer.parseInt(scanner.nextLine());
-        return readExtendedCoefficientMatrix(dimension);
+        int variables = scanner.nextInt();
+        int equations = scanner.nextInt();
+        scanner.nextLine();
+        return readExtendedCoefficientMatrix(variables, equations);
     }
 }

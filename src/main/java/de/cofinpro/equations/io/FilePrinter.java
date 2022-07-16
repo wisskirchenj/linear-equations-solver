@@ -24,11 +24,24 @@ public class FilePrinter {
      * @param vector  the given vector.
      */
     public void printVector(double[] vector) {
+        writeToFile(String.join("\n", Arrays.stream(vector)
+                .map(d -> Math.rint(d * 1e6) / 1e6)
+                .map(d -> {
+                    if (d == -0) return 0;
+                    return d;
+                }).mapToObj(String::valueOf)
+                .toList()));
+    }
+
+    private void writeToFile(String textToWrite) {
         try (FileWriter writer = new FileWriter(outputPath)) {
-            writer.write(String.join("\n", Arrays.stream(vector)
-                    .map(d -> Math.rint(d * 1e6) / 1e6).mapToObj(String::valueOf).toList()));
+            writer.write(textToWrite);
         } catch (IOException e) {
             log.error("output path " + outputPath + " given is not a valid output file path.");
         }
+    }
+
+    public void printMessage(String message) {
+        writeToFile(message);
     }
 }

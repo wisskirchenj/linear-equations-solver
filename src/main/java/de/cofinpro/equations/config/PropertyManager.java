@@ -17,10 +17,17 @@ public class PropertyManager {
     public static final String OUTPUT_FILE_OPTION = "-out";
     private static final Set<String> OPTIONS = Set.of(INPUT_FILE_OPTION, OUTPUT_FILE_OPTION);
     private static final String USAGE = "invalid arguments! use: -in <path> -out <path>";
+    public static final String NO_SOLUTIONS_LABEL = "-no_solutions_label";
+    public static final String INFINITE_SOLUTIONS_LABEL = "-infinite_solutions_label";
 
 
     private PropertyManager() {
         // no instances
+    }
+
+    static {
+        APP_CONFIG.setProperty(NO_SOLUTIONS_LABEL, "No solutions");
+        APP_CONFIG.setProperty(INFINITE_SOLUTIONS_LABEL, "Infinitely many solutions");
     }
 
     public static void processProperties(String[] args) {
