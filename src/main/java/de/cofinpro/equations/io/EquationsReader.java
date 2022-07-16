@@ -5,6 +5,9 @@ import de.cofinpro.equations.model.ExtendedCoefficientMatrix;
 import java.util.Arrays;
 import java.util.Scanner;
 
+/**
+ * abstract class for reading in systems of linear equations. Derived classes are for file or command lin reading.
+ */
 public abstract class EquationsReader {
 
     protected final Scanner scanner;

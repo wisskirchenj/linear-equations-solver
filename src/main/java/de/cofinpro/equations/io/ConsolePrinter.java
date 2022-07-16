@@ -19,7 +19,7 @@ public class ConsolePrinter {
     }
 
     /**
-     * printa vector of doubles as one line, rounding to max. 5 digits after the decimal point.
+     * print a vector of doubles as one line, rounding to max. 5 digits after the decimal point.
      * @param vector the vector input
      */
     public void printVector(double[] vector) {

@@ -19,7 +19,21 @@ The sources of main project tasks (5 stages) and the unit, mockito, spring testi
 
 ## Program description
 
-Coming up soon...
+Arbitrary systems of linear equations of any dimensions can now be solved using the Gauss algorithm. 
+Input and output are taken form and written to file. (cf. the example formats under resources dir - esp. test-folder.)
+The input file has the format:
+
+> <#variables> <#equations> 
+> 
+> <matrix row 1> -> in double format white space separated elements (integer works too of course)
+> 
+> ...
+> 
+> <matrix row #equations>
+
+If the system of linear equations is contradictory, "No solutions" is printed to out file, if it has a non-trivial kernel.
+just "Infinitely many solutions" is output - otherwise the unique solution is printed line wise to the file.
+Input and output paths must be specified by command line arguments.
 
 Have fun!
 
@@ -38,3 +52,9 @@ Have fun!
 
 03.07.22 Stage 3 completed, unique solvable (!) systems of linear equations of arbitrary dimension are now solved,
 by implementing the Gauss algorithm. Input and output are taken / written to file now. (cf. the example formats under resources dir.)
+
+16.07.22 Stage 4 completed, arbitrary systems of linear equations of any dimensions can now be solved
+using the Gauss algorithm. Input and output are taken / written to file. (cf. the example formats under resources dir - esp. test-folder.)
+If the system of linear equations is contradictory, "No solutions" is printed to out file, if it has a non-trivial kernel.
+just "Infinitely many solutions" is output - otherwise the unique solution is printed line wise to the file.
+Input and output paths must be specified by command line arguments.

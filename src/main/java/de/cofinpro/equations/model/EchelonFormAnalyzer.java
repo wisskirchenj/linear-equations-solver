@@ -18,6 +18,11 @@ public class EchelonFormAnalyzer {
         this.matrix = matrixInEchelonForm;
     }
 
+    /**
+     * saves the result vector, resp. a message on no or infinite solutions for the matrix in extended echelon form
+     * given as constructor parameter.
+     * @param outputPath the output file path
+     */
     public void saveResult(String outputPath) {
         FilePrinter filePrinter = new FilePrinter(outputPath);
         if (matrix.hasUnsolvableEquation()) {
