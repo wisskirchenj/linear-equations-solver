@@ -18,7 +18,7 @@ public class ExtendedCoefficientMatrix extends Matrix {
 
     /**
      * Checks, if a matrix has a row of the form "0 0 ... 0 x" for an x != 0, which cannot have a solution.
-     * Note, that the method gives a concise check on a system of lon. equations ony for a matrix in row echelon form.
+     * Note, that the method gives a concise check on a system of lin. equations ony for a matrix in row echelon form.
      * @return the check result
      */
     public boolean hasUnsolvableEquation() {

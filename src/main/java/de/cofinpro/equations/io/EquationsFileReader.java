@@ -22,8 +22,8 @@ public class EquationsFileReader extends EquationsReader {
     }
 
     /**
-     * The method assumes, that the first line in the file contains exactly the dimension number
-     * as is specified for stage 3.
+     * The method assumes, that the first line in the file contains exactly the number of variables
+     * followed by the number of equations, coming up, as is specified for stage 4.
      * @return the ExtendedCoefficientMatrix representing the system of linear equations stored in the file.
      */
     public ExtendedCoefficientMatrix readExtendedCoefficientMatrix() {

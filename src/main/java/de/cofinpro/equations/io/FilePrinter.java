@@ -25,7 +25,7 @@ public class FilePrinter {
      */
     public void printVector(double[] vector) {
         writeToFile(String.join("\n", Arrays.stream(vector)
-                .map(d -> Math.rint(d * 1e6) / 1e6)
+                .map(d -> Math.rint(d * 1e8) / 1e8)
                 .map(d -> {
                     if (d == -0) return 0;
                     return d;
