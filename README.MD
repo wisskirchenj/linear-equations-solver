@@ -8,6 +8,7 @@ the Java Core track, which was at 85% applied core topics before project start.
 ## Technology / External Libraries
 
 - POJO Java 18
+- own implementation of Complex class as immutable java record with double real and imaginary parts
 - Lombok' annotation processors,
 - Apache Log4j SLF4J API binding to Log4j 2 logging and
 - Junit 5 with
@@ -19,13 +20,13 @@ The sources of main project tasks (5 stages) and the unit, mockito, spring testi
 
 ## Program description
 
-Arbitrary systems of linear equations of any dimensions can now be solved using the Gauss algorithm. 
-Input and output are taken form and written to file. (cf. the example formats under resources dir - esp. test-folder.)
+Arbitrary systems of linear equations of any dimensions can be solved using the Gauss algorithm over the complex numbers. 
+Input and output are taken from and written to file. (cf. the example formats under resources dir - esp. test-folder.)
 The input file has the format:
 
 > <#variables> <#equations> 
 > 
-> <matrix row 1> -> in double format white space separated elements (integer works too of course)
+> <matrix row 1> -> in Complex format white space separated elements (real integer works too of course)
 > 
 > ...
 > 
@@ -39,7 +40,7 @@ Have fun!
 
 ## Project completion
 
-[//]: # (Project was completed on xx.0d.22.)
+Project was completed on 17.07.22.
 
 ## Progress
 
@@ -58,3 +59,8 @@ using the Gauss algorithm. Input and output are taken / written to file. (cf. th
 If the system of linear equations is contradictory, "No solutions" is printed to out file, if it has a non-trivial kernel.
 just "Infinitely many solutions" is output - otherwise the unique solution is printed line wise to the file.
 Input and output paths must be specified by command line arguments.
+
+17.07.22 Final Stage 5 completed, all calculations, input parsing and output are now done using complex numbers.
+To achieve this, we implemented a Complex java immutable record. (Alternatively apache's common.math3 lib could
+have been used, but implementing and unit testing was nice practice). Improved property manager - might be useful in many
+contexts now...

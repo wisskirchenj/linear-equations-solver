@@ -1,12 +1,13 @@
 package de.cofinpro.equations.model;
 
-import lombok.experimental.Accessors;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
-@Accessors(chain = true)
+/**
+ * immutable class representing a complex number
+ * @param real the real part
+ * @param imaginary the imaginary part
+ */
 public record Complex(double real, double imaginary) {
 
     private static final Pattern REAL_AND_IMAGINARY_PATTERN = Pattern.compile("(.*\\d)([+-].*)i");
@@ -17,6 +18,12 @@ public record Complex(double real, double imaginary) {
         this(real, 0);
     }
 
+    /**
+     * tries to parse a given string into a complex number (e.g.: "-2.513+i" or "-2i" or "1").
+     * @param input the string input to parse
+     * @return the complex number constructed from the parsing result
+     * @throws NumberFormatException if the input is not a vlaid complex string representation.
+     */
     public static Complex parseOf(String input) {
         Matcher matcher = REAL_AND_IMAGINARY_PATTERN.matcher(input);
         if (matcher.matches()) {
@@ -29,6 +36,11 @@ public record Complex(double real, double imaginary) {
         return new Complex(Double.parseDouble(input));
     }
 
+    /**
+     * parse only thew imaginary part string (called without the "i").
+     * @param input string to parse - without "i" at the end
+     * @return the imaginary part (double)
+     */
     private static double parseImaginary(String input) {
         if (input.equals("") || input.equals("+")) {
             return 1;
@@ -39,6 +51,10 @@ public record Complex(double real, double imaginary) {
         return Double.parseDouble(input);
     }
 
+    /**
+     * rounding errors can produce near 0 numbers, which are checked for here
+     * @return true, if the norm square is smaller than 1e-16
+     */
     public boolean countsAsZero() {
         return normSquare() < 1e-16;
     }
