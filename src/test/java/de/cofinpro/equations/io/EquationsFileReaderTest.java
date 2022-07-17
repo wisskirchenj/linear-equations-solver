@@ -1,7 +1,7 @@
 package de.cofinpro.equations.io;
 
+import de.cofinpro.equations.model.Complex;
 import de.cofinpro.equations.model.ExtendedCoefficientMatrix;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -26,6 +26,6 @@ class EquationsFileReaderTest {
         ExtendedCoefficientMatrix extendedCoefficientMatrix = fileReader.readExtendedCoefficientMatrix();
         assertEquals(3, extendedCoefficientMatrix.getRows());
         assertEquals(4, extendedCoefficientMatrix.getColumns());
-        assertArrayEquals(new double[] {9, 1, 0}, extendedCoefficientMatrix.getResultVector());
+        assertArrayEquals(new Complex[] {new Complex(9), new Complex(1), new Complex(0)}, extendedCoefficientMatrix.getResultVector());
     }
 }

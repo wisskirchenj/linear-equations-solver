@@ -4,13 +4,18 @@ import de.cofinpro.equations.config.PropertyManager;
 import de.cofinpro.equations.controller.LinearEquationsController;
 import de.cofinpro.equations.io.ConsolePrinter;
 import de.cofinpro.equations.io.EquationsFileReader;
+import de.cofinpro.equations.model.Complex;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class LinearEquationsIT {
 
@@ -47,6 +52,24 @@ class LinearEquationsIT {
         assertEquals(PropertyManager.getProperty(PropertyManager.NO_SOLUTIONS_LABEL), new String(Files.readAllBytes(Path.of(OUTPUT_PATH))));
     }
 
+
+    @Test
+    void example_Stage5() throws IOException {
+        PropertyManager.getProperties().setProperty(PropertyManager.OUTPUT_FILE_OPTION, OUTPUT_PATH);
+        controller = new LinearEquationsController(printer,  new EquationsFileReader("src/test/resources/ex_stage5.txt"));
+        controller.run();
+        Complex[] results = Arrays.stream((new String(Files.readAllBytes(Path.of(OUTPUT_PATH)))).split("\\n"))
+                .map(Complex::parseOf).toArray(Complex[]::new);
+        Complex[] expected = new Complex[] {new Complex(6.73, -22.9),
+                new Complex(-1.79, 2),
+                new Complex(15.6994, 7.396)};
+        for (int i = 0; i < results.length; i++) {
+            assertTrue(Math.abs(results[i].real() / expected[i].real() - 1) < 0.05);
+            assertTrue(Math.abs(results[i].imaginary() / expected[i].imaginary() - 1) < 0.05);
+        }
+    }
+
+
     @Test
     void whenUniqueSolutionMatrixWithRedundantEquations_thenSolutionFound() throws IOException {
         PropertyManager.getProperties().setProperty(PropertyManager.OUTPUT_FILE_OPTION, OUTPUT_PATH);
@@ -55,26 +78,15 @@ class LinearEquationsIT {
         assertEquals("-19.0\n7.0\n1.0", new String(Files.readAllBytes(Path.of(OUTPUT_PATH))));
     }
 
-    @Test
-    void whenLessEquationsThenVariablesValid_thenInfiniteSolutionFound() throws IOException {
+    @ParameterizedTest
+    @ValueSource(strings = {"src/test/resources/ex_infinite_valid.txt",
+            "src/test/resources/ex_infinite_square.txt",
+            "src/test/resources/ex_infinite_more.txt",
+            "src/test/resources/ex_zero.txt"
+            })
+    void whenLessSignificantEquationsThanVariablesValid_thenInfiniteSolutionFound(String inputPath) throws IOException {
         PropertyManager.getProperties().setProperty(PropertyManager.OUTPUT_FILE_OPTION, OUTPUT_PATH);
-        controller = new LinearEquationsController(printer,  new EquationsFileReader("src/test/resources/ex_infinite_valid.txt"));
-        controller.run();
-        assertEquals(PropertyManager.getProperty(PropertyManager.INFINITE_SOLUTIONS_LABEL), new String(Files.readAllBytes(Path.of(OUTPUT_PATH))));
-    }
-
-    @Test
-    void whenSquareSmallerRank_thenInfiniteSolutionFound() throws IOException {
-        PropertyManager.getProperties().setProperty(PropertyManager.OUTPUT_FILE_OPTION, OUTPUT_PATH);
-        controller = new LinearEquationsController(printer,  new EquationsFileReader("src/test/resources/ex_infinite_square.txt"));
-        controller.run();
-        assertEquals(PropertyManager.getProperty(PropertyManager.INFINITE_SOLUTIONS_LABEL), new String(Files.readAllBytes(Path.of(OUTPUT_PATH))));
-    }
-
-    @Test
-    void whenSmallerRankMoreEquations_thenInfiniteSolutionFound() throws IOException {
-        PropertyManager.getProperties().setProperty(PropertyManager.OUTPUT_FILE_OPTION, OUTPUT_PATH);
-        controller = new LinearEquationsController(printer,  new EquationsFileReader("src/test/resources/ex_infinite_more.txt"));
+        controller = new LinearEquationsController(printer,  new EquationsFileReader(inputPath));
         controller.run();
         assertEquals(PropertyManager.getProperty(PropertyManager.INFINITE_SOLUTIONS_LABEL), new String(Files.readAllBytes(Path.of(OUTPUT_PATH))));
     }
@@ -85,14 +97,6 @@ class LinearEquationsIT {
         controller = new LinearEquationsController(printer,  new EquationsFileReader("src/test/resources/ex_square_no.txt"));
         controller.run();
         assertEquals(PropertyManager.getProperty(PropertyManager.NO_SOLUTIONS_LABEL), new String(Files.readAllBytes(Path.of(OUTPUT_PATH))));
-    }
-
-    @Test
-    void whenZeroMatrix_thenInfiniteSolutionFound() throws IOException {
-        PropertyManager.getProperties().setProperty(PropertyManager.OUTPUT_FILE_OPTION, OUTPUT_PATH);
-        controller = new LinearEquationsController(printer,  new EquationsFileReader("src/test/resources/ex_zero.txt"));
-        controller.run();
-        assertEquals(PropertyManager.getProperty(PropertyManager.INFINITE_SOLUTIONS_LABEL), new String(Files.readAllBytes(Path.of(OUTPUT_PATH))));
     }
 
     @Test

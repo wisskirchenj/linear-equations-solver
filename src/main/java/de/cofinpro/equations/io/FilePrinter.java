@@ -1,6 +1,7 @@
 package de.cofinpro.equations.io;
 
 
+import de.cofinpro.equations.model.Complex;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.FileWriter;
@@ -23,13 +24,9 @@ public class FilePrinter {
      * print a vector's components line-wise to a newly created output file - as only content.
      * @param vector  the given vector.
      */
-    public void printVector(double[] vector) {
+    public void printVector(Complex[] vector) {
         writeToFile(String.join("\n", Arrays.stream(vector)
-                .map(d -> Math.rint(d * 1e8) / 1e8)
-                .map(d -> {
-                    if (d == -0) return 0;
-                    return d;
-                }).mapToObj(String::valueOf)
+                .map(Complex::toString)
                 .toList()));
     }
 

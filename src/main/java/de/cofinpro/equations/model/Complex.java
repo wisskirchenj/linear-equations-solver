@@ -11,38 +11,10 @@ public record Complex(double real, double imaginary) {
 
     private static final Pattern REAL_AND_IMAGINARY_PATTERN = Pattern.compile("(.*\\d)([+-].*)i");
     private static final Pattern IMAGINARY_PART_PATTERN = Pattern.compile("(.*)i");
+    public static final Complex ONE = new Complex(1);
 
     public Complex(double real) {
         this(real, 0);
-    }
-
-    public Complex plus(Complex other) {
-        return new Complex(real + other.real, imaginary + other.imaginary);
-    }
-
-    public Complex minus(Complex other) {
-        return new Complex(real - other.real, imaginary - other.imaginary);
-    }
-
-    public Complex times(Complex other) {
-        return new Complex(real * other.real - imaginary * other.imaginary,
-                real * other.imaginary + imaginary * other.real);
-    }
-
-    public double normSquare() {
-        return real * real + imaginary * imaginary;
-    }
-
-    public Complex conjugate() {
-        if (imaginary == 0) {
-            return this;
-        }
-        return new Complex(real, -imaginary);
-    }
-
-    public Complex dividedBy(Complex other) {
-        return new Complex((real * other.real + imaginary * other.imaginary) / other.normSquare(),
-                (imaginary * other.real - real * other.imaginary) / other.normSquare());
     }
 
     public static Complex parseOf(String input) {
@@ -65,6 +37,43 @@ public record Complex(double real, double imaginary) {
             return -1;
         }
         return Double.parseDouble(input);
+    }
+
+    public boolean countsAsZero() {
+        return normSquare() < 1e-16;
+    }
+
+    public Complex plus(Complex other) {
+        return new Complex(real + other.real, imaginary + other.imaginary);
+    }
+
+    public Complex minus(Complex other) {
+        return new Complex(real - other.real, imaginary - other.imaginary);
+    }
+
+    public Complex times(Complex other) {
+        return new Complex(real * other.real - imaginary * other.imaginary,
+                real * other.imaginary + imaginary * other.real);
+    }
+
+    public Complex negate() {
+        return new Complex(-real, -imaginary);
+    }
+
+    public double normSquare() {
+        return real * real + imaginary * imaginary;
+    }
+
+    public Complex conjugate() {
+        if (imaginary == 0) {
+            return this;
+        }
+        return new Complex(real, -imaginary);
+    }
+
+    public Complex dividedBy(Complex other) {
+        return new Complex((real * other.real + imaginary * other.imaginary) / other.normSquare(),
+                (imaginary * other.real - real * other.imaginary) / other.normSquare());
     }
 
     @Override

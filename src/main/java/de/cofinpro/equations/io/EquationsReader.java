@@ -1,5 +1,6 @@
 package de.cofinpro.equations.io;
 
+import de.cofinpro.equations.model.Complex;
 import de.cofinpro.equations.model.ExtendedCoefficientMatrix;
 
 import java.util.Arrays;
@@ -25,16 +26,16 @@ public abstract class EquationsReader {
     public ExtendedCoefficientMatrix readExtendedCoefficientMatrix(int variables, int equations) {
         ExtendedCoefficientMatrix matrix = new ExtendedCoefficientMatrix(variables, equations);
         for (int i = 0; i < equations; i++) {
-            matrix.fillRowFrom(i, readLineIntoDoubles());
+            matrix.fillRowFrom(i, readLineIntoComplexNumbers());
         }
         return matrix;
     }
 
     /**
-     * read in an arbitrary length line of doubles.
-     * @return the doubles as array.
+     * read in an arbitrary length line of complex numbers.
+     * @return the complex numbers as array.
      */
-    private double[] readLineIntoDoubles() {
-        return Arrays.stream(scanner.nextLine().split("\\s+")).mapToDouble(Double::parseDouble).toArray();
+    private Complex[] readLineIntoComplexNumbers() {
+        return Arrays.stream(scanner.nextLine().split("\\s+")).map(Complex::parseOf).toArray(Complex[]::new);
     }
 }

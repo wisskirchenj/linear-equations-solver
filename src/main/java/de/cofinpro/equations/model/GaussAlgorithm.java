@@ -28,9 +28,9 @@ public class GaussAlgorithm {
     private void backSolve(ExtendedCoefficientMatrix matrix) {
         for (int col = matrix.getColumns() - 2; col > 0; col--) {
             for (int row = col - 1; row >= 0 ; row--) {
-                if (col < matrix.getRows() && matrix.get(row, col) != 0 && matrix.get(col, col) != 0) {
-                    printer.printInfo("%.6f * R%d + R%d -> R%d".formatted(-matrix.get(row, col), col, row, row));
-                    matrix.addScaledRowToRow(-matrix.get(row, col), col, row);
+                if (col < matrix.getRows() && !matrix.get(row, col).countsAsZero() && !matrix.get(col, col).countsAsZero()) {
+                    printer.printInfo("%s * R%d + R%d -> R%d".formatted(matrix.get(row, col).negate(), col, row, row));
+                    matrix.addScaledRowToRow(matrix.get(row, col).negate(), col, row);
                 }
             }
         }
@@ -44,9 +44,9 @@ public class GaussAlgorithm {
         for (int col = 0; col < Math.min(matrix.getColumns() - 1, matrix.getRows()); col++) {
             setPivotOne(col, matrix);
             for (int row = col + 1; row < matrix.getRows(); row++) {
-                if (matrix.notPrecisionCorrectedZero(matrix.get(row, col))) {
-                    printer.printInfo("%.6f * R%d + R%d -> R%d".formatted(-matrix.get(row, col), col, row, row));
-                    matrix.addScaledRowToRow(-matrix.get(row, col), col, row);
+                if (!matrix.get(row, col).countsAsZero()) {
+                    printer.printInfo("%s * R%d + R%d -> R%d".formatted(matrix.get(row, col).negate(), col, row, row));
+                    matrix.addScaledRowToRow(matrix.get(row, col).negate(), col, row);
                 }
             }
         }
@@ -61,7 +61,7 @@ public class GaussAlgorithm {
      */
     private boolean setPivotOne(int col, ExtendedCoefficientMatrix matrix) {
         int row = col;
-        while (row < matrix.getRows() && matrix.get(row, col) == 0) {
+        while (row < matrix.getRows() && matrix.get(row, col).countsAsZero()) {
             row++;
         }
         if (row == matrix.getRows()) {
@@ -71,8 +71,8 @@ public class GaussAlgorithm {
             printer.printInfo("swapping R%d <-> R%d".formatted(row, col));
             matrix.swapRows(row, col);
         }
-        if (matrix.notPrecisionCorrectedZero(1 - matrix.get(col, col))) {
-            printer.printInfo("1/%.6f * R%d -> R%d".formatted(matrix.get(col, col), col, col));
+        if (!Complex.ONE.minus(matrix.get(col, col)).countsAsZero()) {
+            printer.printInfo("1/%s * R%d -> R%d".formatted(matrix.get(col, col), col, col));
             matrix.scaleRowInverse(col, matrix.get(col, col));
         }
         return true;

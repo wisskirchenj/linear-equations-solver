@@ -12,8 +12,8 @@ public class ExtendedCoefficientMatrix extends Matrix {
         super(equations, variables + 1);
     }
 
-    public double[] getResultVector() {
-        return IntStream.range(0, columns - 1).mapToDouble(i -> elements[i][columns - 1]).toArray();
+    public Complex[] getResultVector() {
+        return IntStream.range(0, columns - 1).mapToObj(i -> elements[i][columns - 1]).toArray(Complex[]::new);
     }
 
     /**
@@ -25,12 +25,12 @@ public class ExtendedCoefficientMatrix extends Matrix {
         for (int i = 0; i < rows; i++) {
             boolean allCoefficientsZero = true;
             for (int j = 0; j < columns - 1; j++) {
-                if (notPrecisionCorrectedZero(get(i, j))) {
+                if (!get(i, j).countsAsZero()) {
                     allCoefficientsZero = false;
                     break;
                 }
             }
-            if (allCoefficientsZero && notPrecisionCorrectedZero(get(i, columns - 1))) {
+            if (allCoefficientsZero && !get(i, columns - 1).countsAsZero()) {
                 return true;
             }
         }

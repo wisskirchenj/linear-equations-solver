@@ -12,15 +12,15 @@ public class Matrix {
 
     protected final int rows;
     protected final int columns;
-    protected final double[][] elements;
+    protected final Complex[][] elements;
 
     public Matrix(int rows, int columns) {
         this.rows = rows;
         this.columns = columns;
-        this.elements = new double[rows][columns];
+        this.elements = new Complex[rows][columns];
     }
 
-    public double get(int row, int col) {
+    public Complex get(int row, int col) {
         return elements[row][col];
     }
 
@@ -29,7 +29,7 @@ public class Matrix {
      * @param rowIndex index of the row to fill
      * @param rowData vector to fill into row
      */
-    public void fillRowFrom(int rowIndex, double[] rowData) {
+    public void fillRowFrom(int rowIndex, Complex[] rowData) {
         System.arraycopy(rowData, 0, elements[rowIndex], 0, columns);
     }
 
@@ -38,8 +38,8 @@ public class Matrix {
      * @param row the row index
      * @param inverseFactor the factor, which is inverted and scaled with
      */
-    public void scaleRowInverse(int row, double inverseFactor) {
-        IntStream.range(0, columns).forEach(i -> elements[row][i] /= inverseFactor);
+    public void scaleRowInverse(int row, Complex inverseFactor) {
+        IntStream.range(0, columns).forEach(i -> elements[row][i] = elements[row][i].dividedBy(inverseFactor));
     }
 
     /**
@@ -48,13 +48,13 @@ public class Matrix {
      * @param rowToAdd row index of row to add
      * @param targetRow row index of row which is replaced by result
      */
-    public void addScaledRowToRow(double factor, int rowToAdd, int targetRow) {
+    public void addScaledRowToRow(Complex factor, int rowToAdd, int targetRow) {
         IntStream.range(0, columns).forEach(i -> elements[targetRow][i] =
-                Math.fma(factor, elements[rowToAdd][i], elements[targetRow][i]));
+                factor.times(elements[rowToAdd][i]).plus(elements[targetRow][i]));
     }
 
     public void swapRows(int i, int j) {
-        double[] temp = elements[i].clone();
+        Complex[] temp = elements[i].clone();
         fillRowFrom(i, elements[j]);
         fillRowFrom(j, temp);
     }
@@ -74,25 +74,16 @@ public class Matrix {
     }
 
     /**
-     * checks, if a row is not constantly zero in a double precision range
+     * checks, if a row is not constantly zero in a precision range
      * @param row row index
-     * @return true if the row is NOT completely zero in a double precision range
+     * @return true if the row is NOT completely zero in a precision range
      */
     private boolean isNotZeroRow(int row) {
-        for (double el: elements[row]) {
-            if (notPrecisionCorrectedZero(el)) {
+        for (Complex el: elements[row]) {
+            if (!el.countsAsZero()) {
                 return true;
             }
         }
         return false;
-    }
-
-    /**
-     * checks, if a double is NOT smaller than a precision error - thus to be regarded as non-zero
-     * @param decimal given double
-     * @return true if the element is NOT zero in the precision
-     */
-    protected boolean notPrecisionCorrectedZero(double decimal) {
-        return Math.abs(decimal) > 1e-08;
     }
 }
